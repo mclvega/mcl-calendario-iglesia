@@ -92,7 +92,7 @@ function cabecera(personas: string[], persona: string): HTMLElement {
   return h(
     'header',
     { class: 'cabecera' },
-    h('h1', { class: 'titulo' }, iconoCalendario(), 'Calendario'),
+    h('h1', { class: 'titulo' }, iconoCalendario(), 'La Segunda Venida de Cristo'),
     h('div', { class: 'barra-acciones' }, personas.length ? filtroPersona(personas, persona) : null, herramientas()),
   );
 
