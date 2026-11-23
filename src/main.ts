@@ -47,8 +47,17 @@ window.addEventListener('online', () => void actualizar());
 window.addEventListener('beforeinstallprompt', () => setTimeout(() => app.refrescarCalendario()));
 window.addEventListener('appinstalled', () => app.refrescarCalendario());
 
+// El service worker guarda toda la app en la caché. Cada vez que se abre o se vuelve a la app con
+// internet, se busca una versión nueva: si la hay, se guarda sola (sin botón de descarga).
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  const buscarVersionNueva = () => {
+    if (navigator.onLine) void navigator.serviceWorker.getRegistration().then((reg) => reg?.update()).catch(() => undefined);
+  };
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+    navigator.serviceWorker.register('/sw.js').then(buscarVersionNueva, () => undefined);
   });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') buscarVersionNueva();
+  });
+  window.addEventListener('online', buscarVersionNueva);
 }

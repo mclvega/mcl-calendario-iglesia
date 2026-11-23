@@ -1,9 +1,9 @@
 import { boton, h } from './dom';
 
 /*
- * «Usar sin conexión» en Configuración → Datos (se copia tal cual a `src/ui/sinconexion.ts`).
- * El service worker ya guarda toda la app la primera vez; aquí se ve el estado,
- * se puede descargar o actualizar a mano y se ofrece instalar el calendario como app.
+ * «Instalar como app» al final del calendario (adaptado de `netlify/herramientas/sinconexion.ts`).
+ * No hay botón de descarga: el service worker guarda la app solo y se actualiza cada vez que
+ * se abre con internet (ver `main.ts`), y el calendario se copia en el teléfono en cada descarga.
  */
 
 interface EventoInstalar extends Event {
@@ -31,72 +31,8 @@ const instalada = () => {
 const ocultar = (el: HTMLElement) => (el.style.display = 'none');
 const esIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-/** Archivos guardados en la caché de la app (0 si no hay). */
-async function archivosGuardados(): Promise<number> {
-  if (typeof caches === 'undefined') return 0;
-  let total = 0;
-  for (const nombre of await caches.keys()) total = Math.max(total, (await (await caches.open(nombre)).keys()).length);
-  return total;
-}
-
-/** Espera a que el service worker quede activo (o se rinde a los 30 s). */
-function esperarActivo(reg: ServiceWorkerRegistration): Promise<boolean> {
-  if (reg.active && !reg.installing && !reg.waiting) return Promise.resolve(true);
-  return new Promise((resolver) => {
-    const sw = reg.installing ?? reg.waiting;
-    if (!sw) return resolver(!!reg.active);
-    const fin = setTimeout(() => resolver(!!reg.active), 30000);
-    sw.addEventListener('statechange', () => {
-      if (sw.state === 'activated' || sw.state === 'redundant') {
-        clearTimeout(fin);
-        resolver(sw.state === 'activated');
-      }
-    });
-  });
-}
-
-/** Opciones de «Usar sin conexión» e «Instalar como app» para la sección Datos. */
+/** Tarjeta «Instalar como app»: botón si el navegador lo permite o, si no, los pasos a seguir. */
 export function opcionesSinConexion(): HTMLElement {
-  const estado = h('p', { class: 'ayuda-texto', 'aria-live': 'polite', text: 'Comprobando…' });
-  const soportado = 'serviceWorker' in navigator && typeof caches !== 'undefined';
-
-  const comprobar = async () => {
-    if (!soportado) {
-      estado.textContent = 'Tu navegador no permite guardar el calendario para usarlo sin conexión.';
-      return;
-    }
-    const reg = await navigator.serviceWorker.getRegistration();
-    const n = await archivosGuardados();
-    if (reg?.active && n > 0) estado.textContent = `✅ Descargado (${n} archivos): se puede ver sin conexión con el último calendario descargado.`;
-    else if (reg?.installing) estado.textContent = '⏳ Descargando el calendario…';
-    else estado.textContent = 'Aún no está descargado. Pulsa «Descargar ahora» con conexión.';
-  };
-
-  const descargar = boton('Descargar ahora', async () => {
-    if (!soportado) return;
-    if (import.meta.env.DEV) {
-      estado.textContent = 'En modo desarrollo no hay descarga: funciona en la versión publicada.';
-      return;
-    }
-    if (!navigator.onLine) {
-      estado.textContent = 'Necesitas conexión para descargar o actualizar el calendario.';
-      return;
-    }
-    descargar.disabled = true;
-    estado.textContent = '⏳ Descargando el calendario…';
-    try {
-      const reg = (await navigator.serviceWorker.getRegistration()) ?? (await navigator.serviceWorker.register('/sw.js'));
-      await reg.update();
-      await esperarActivo(reg);
-    } catch {
-      estado.textContent = 'No se pudo descargar. Inténtalo de nuevo con conexión.';
-      descargar.disabled = false;
-      return;
-    }
-    descargar.disabled = false;
-    await comprobar();
-  }, { icono: '📥', variante: 'suave' });
-
   const instalar = boton('Instalar como app', async () => {
     if (aviso) {
       await aviso.prompt();
@@ -117,7 +53,12 @@ export function opcionesSinConexion(): HTMLElement {
       : 'Para instalarlo: menú del navegador → «Instalar app» o «Añadir a pantalla de inicio».';
   }
 
-  void comprobar();
-  // Primero instalar (lo más útil para personas mayores) y después la descarga para usar sin conexión.
-  return h('div', { class: 'opcion-config' }, h('span', { class: 'etiqueta', text: '📲 Instalar como app' }), instalar, instalarTexto, estado, descargar);
+  return h(
+    'div',
+    { class: 'opcion-config' },
+    h('span', { class: 'etiqueta', text: '📲 Instalar como app' }),
+    instalar,
+    instalarTexto,
+    h('p', { class: 'ayuda-texto', text: 'Cada vez que lo abres con internet se guarda la última versión, para verlo también sin conexión.' }),
+  );
 }
