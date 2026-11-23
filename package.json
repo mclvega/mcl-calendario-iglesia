@@ -1,0 +1,22 @@
+{
+  "name": "mcl-calendario-iglesia",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Calendario de la iglesia: quién coordina y quién predica cada día de culto, en letra grande y simple.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
+  }
+}

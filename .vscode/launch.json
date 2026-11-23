@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Calendario: netlify dev (con configuración)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "netlify dev --port 4300",
+      "cwd": "${workspaceFolder}",
+      "serverReadyAction": {
+        "pattern": "localhost:(\\d+)",
+        "uriFormat": "http://localhost:%s",
+        "action": "openExternally"
+      }
+    }
+  ]
+}

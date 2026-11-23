@@ -1,0 +1,726 @@
+/* Calendario de la Iglesia: letra grande, alto contraste y botones fáciles de tocar. */
+
+:root {
+  --fondo: #f6f1e7;
+  --tarjeta: #ffffff;
+  --texto: #141414;
+  --suave: #4a4a4a;
+  --borde: #d6ccb8;
+  --primario: #1746b8;
+  --primario-texto: #ffffff;
+  --acento: #fff1b8;
+  --acento-borde: #d39e00;
+  --peligro: #b3261e;
+  --ok: #1e7b34;
+  --sombra: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --radio: 16px;
+  color-scheme: light;
+  font-size: 22px;
+}
+
+:root[data-tema='oscuro'] {
+  /* Negro puro (AMOLED): las tarjetas se separan con bordes finos. */
+  --fondo: #000000;
+  --tarjeta: #000000;
+  --texto: #f5f5f5;
+  --suave: #bdbdbd;
+  --borde: #2a2a2a;
+  --primario: #8fb3ff;
+  --primario-texto: #000000;
+  --acento: #1f1800;
+  --acento-borde: #ffcc33;
+  --peligro: #ff8a80;
+  --ok: #7ddc8f;
+  --sombra: none;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+#app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 12px 16px 40px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 4px solid var(--acento-borde);
+  outline-offset: 2px;
+}
+
+.oculto-visual {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ---------- Botones ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  min-height: 56px;
+  padding: 0.4em 1em;
+  border-radius: 14px;
+  border: 2px solid var(--borde);
+  background: var(--tarjeta);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn-primario {
+  background: var(--primario);
+  border-color: var(--primario);
+  color: var(--primario-texto);
+}
+
+.btn-suave {
+  background: transparent;
+}
+
+.btn-peligro {
+  border-color: var(--peligro);
+  color: var(--peligro);
+  background: transparent;
+}
+
+.btn-ancho {
+  width: 100%;
+}
+
+.btn-icono-derecha {
+  flex-direction: row-reverse;
+}
+
+.btn-herramienta,
+.btn-icono-solo {
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: 14px;
+  border: 2px solid var(--borde);
+  background: var(--tarjeta);
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn-herramienta:disabled,
+.btn-icono-solo:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.btn-icono-solo.peligro {
+  color: var(--peligro);
+}
+
+/* ---------- Cabecera ---------- */
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 0 14px;
+}
+
+.titulo {
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+.herramientas {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- Próximo culto ---------- */
+
+.destacado {
+  background: var(--tarjeta);
+  border: 3px solid var(--primario);
+  border-radius: var(--radio);
+  padding: 18px 18px 20px;
+  box-shadow: var(--sombra);
+  margin-bottom: 22px;
+}
+
+.destacado.es-hoy {
+  background: var(--acento);
+  border-color: var(--acento-borde);
+}
+
+.destacado-etiqueta {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--primario-texto);
+  background: var(--primario);
+  border-radius: 999px;
+  padding: 2px 14px;
+  margin-bottom: 8px;
+}
+
+.es-hoy .destacado-etiqueta {
+  background: var(--acento-borde);
+  color: #000;
+}
+
+.destacado-fecha {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.destacado-asignaciones .asignacion {
+  padding: 8px 0;
+  border-top: 1px solid var(--borde);
+}
+
+.destacado-asignaciones .persona {
+  font-size: 1.5rem;
+}
+
+.asignacion {
+  display: flex;
+  flex-direction: column;
+}
+
+.rol {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--suave);
+}
+
+.persona {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.por-confirmar {
+  color: var(--suave);
+  font-style: italic;
+}
+
+.nota {
+  font-weight: 800;
+  color: var(--primario);
+  margin-bottom: 6px;
+}
+
+/* ---------- Mes ---------- */
+
+.nav-mes {
+  margin-bottom: 12px;
+}
+
+.nav-mes-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  scroll-margin-top: 12px;
+}
+
+.mes-titulo {
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-align: center;
+  flex: 1;
+  scroll-margin-top: 12px;
+}
+
+.btn-mes .btn-texto {
+  display: none;
+}
+
+@media (min-width: 560px) {
+  .btn-mes .btn-texto {
+    display: inline;
+  }
+}
+
+.btn-volver {
+  width: 100%;
+}
+
+/* ---------- Lista de días ---------- */
+
+.lista-dias {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dia {
+  display: flex;
+  gap: 14px;
+  background: var(--tarjeta);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 12px 14px;
+  box-shadow: var(--sombra);
+}
+
+.dia.pasado {
+  opacity: 0.55;
+}
+
+.dia.es-hoy {
+  background: var(--acento);
+  border: 3px solid var(--acento-borde);
+}
+
+.dia-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.4em;
+  padding-right: 12px;
+  border-right: 2px solid var(--borde);
+}
+
+.dia-nombre {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--primario);
+}
+
+.dia-numero {
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.dia-hoy {
+  margin-top: 4px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  background: var(--acento-borde);
+  color: #000;
+  border-radius: 999px;
+  padding: 0 8px;
+}
+
+.dia-cuerpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.dia-asignaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vacio {
+  text-align: center;
+  color: var(--suave);
+  padding: 24px 8px;
+}
+
+/* ---------- Pie ---------- */
+
+.pie {
+  margin-top: 28px;
+  text-align: center;
+  color: var(--suave);
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.estado-conexion.sin-conexion {
+  color: var(--peligro);
+  font-weight: 700;
+}
+
+/* ---------- Formularios ---------- */
+
+.campo {
+  width: 100%;
+  min-height: 56px;
+  padding: 0.35em 0.6em;
+  border: 2px solid var(--borde);
+  border-radius: 12px;
+  background: var(--tarjeta);
+  color: var(--texto);
+}
+
+.campo:focus {
+  border-color: var(--primario);
+}
+
+.campo-clave {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.error {
+  color: var(--peligro);
+  font-weight: 700;
+  min-height: 1.35em;
+}
+
+.etiqueta {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.ayuda-texto {
+  color: var(--suave);
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.pila {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pila-chica {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.texto-grande {
+  font-size: 1.05rem;
+}
+
+.fila-botones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fila-botones .btn {
+  flex: 1;
+}
+
+/* ---------- Configuración ---------- */
+
+.cabecera-config {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--fondo);
+  padding-top: 10px;
+  border-bottom: 2px solid var(--borde);
+}
+
+.estado-guardado {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.estado-guardado.ok {
+  color: var(--ok);
+}
+
+.estado-guardado.pendiente {
+  color: var(--suave);
+}
+
+.estado-guardado.error {
+  color: var(--peligro);
+}
+
+.pestanas {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 12px 0;
+  margin-bottom: 6px;
+}
+
+.pestana {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1 0 auto;
+  min-height: 64px;
+  padding: 6px 12px;
+  border: 2px solid var(--borde);
+  border-radius: 14px;
+  background: var(--tarjeta);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pestana[aria-selected='true'] {
+  background: var(--primario);
+  border-color: var(--primario);
+  color: var(--primario-texto);
+}
+
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.aviso-fijo {
+  background: var(--acento);
+  border: 2px solid var(--acento-borde);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 700;
+}
+
+.agregar {
+  background: var(--tarjeta);
+  border: 2px dashed var(--borde);
+  border-radius: var(--radio);
+  padding: 12px;
+}
+
+.fila-campos {
+  display: flex;
+  gap: 8px;
+}
+
+.fila-campos .campo {
+  flex: 1;
+  min-width: 0;
+}
+
+.lista-editar,
+.lista-mantenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tarjeta-fecha {
+  background: var(--tarjeta);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 14px;
+  scroll-margin-top: 180px;
+}
+
+.tarjeta-fecha.oculta {
+  opacity: 0.6;
+}
+
+.tarjeta-titulo {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  font-size: 0.7rem;
+  font-weight: 800;
+  background: var(--acento);
+  border: 1px solid var(--acento-borde);
+  border-radius: 999px;
+  padding: 0 10px;
+}
+
+.chip-gris {
+  background: transparent;
+  border-color: var(--borde);
+  color: var(--suave);
+}
+
+.fila-asignacion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: 6px;
+}
+
+@media (max-width: 520px) {
+  .fila-asignacion {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .fila-asignacion select:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.fila-mantenedor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fila-mantenedor .campo {
+  flex: 1;
+  min-width: 0;
+}
+
+.conteo {
+  font-size: 0.75rem;
+  color: var(--suave);
+  white-space: nowrap;
+}
+
+.dias-semana {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dia-semana {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 8px 14px;
+  border: 2px solid var(--borde);
+  border-radius: 14px;
+  background: var(--tarjeta);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dia-semana input {
+  width: 30px;
+  height: 30px;
+  accent-color: var(--primario);
+}
+
+.opcion-config {
+  background: var(--tarjeta);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ---------- Modales y avisos (src/ui/dom.ts) ---------- */
+
+.modal-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: 100%;
+  overflow: auto;
+  background: var(--tarjeta);
+  color: var(--texto);
+  border: 2px solid var(--borde);
+  border-radius: 20px;
+  padding: 22px 18px 18px;
+}
+
+.modal-titulo {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0 48px 14px 0;
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.avisos {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(92vw, 520px);
+  pointer-events: none;
+}
+
+.aviso {
+  background: var(--texto);
+  color: var(--fondo);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-weight: 700;
+  text-align: center;
+  transition: opacity 0.4s;
+}
+
+.aviso.saliendo {
+  opacity: 0;
+}
