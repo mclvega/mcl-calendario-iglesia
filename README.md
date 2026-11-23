@@ -2,7 +2,7 @@
 
 Calendario de los cultos: quién coordina, quién predica (y cualquier otro tipo de tarea) cada día. Pensado para personas mayores: letra grande, alto contraste, el próximo culto destacado arriba y la lista del mes como en la pizarra.
 
-Sitio: https://mcl-calendario-iglesia.netlify.app
+Sitio: https://calendario-iglesia.netlify.app
 
 ## Uso
 
