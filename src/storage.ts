@@ -16,7 +16,7 @@ export type Tema = 'claro' | 'oscuro';
 export interface Preferencias {
   tamano: number;
   tema: Tema;
-  /** Filtro «Ver turnos de»: '' = todas las personas. */
+  /** Filtro «Filtrar por»: '' = todas las personas. */
   persona: string;
 }
 

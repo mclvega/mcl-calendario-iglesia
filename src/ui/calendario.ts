@@ -80,8 +80,18 @@ function destacadoPersona(datos: Datos, persona: string, hoy: string): HTMLEleme
   );
 }
 
-/** Título y, en una sola fila, el filtro por persona y los botones de letra, tema y Configuración. */
+/** Título y el filtro por persona a todo el ancho. */
 function cabecera(personas: string[], persona: string): HTMLElement {
+  return h(
+    'header',
+    { class: 'cabecera' },
+    h('h1', { class: 'titulo' }, iconoCalendario(), 'La Segunda Venida de Cristo'),
+    personas.length ? h('div', { class: 'barra-acciones' }, filtroPersona(personas, persona)) : null,
+  );
+}
+
+/** Botones de letra, tema y Configuración, al final del calendario. */
+function herramientas(): HTMLElement {
   const prefs = leerPreferencias();
   const cambiar = (cambios: Partial<typeof prefs>) => {
     const nuevas = { ...prefs, ...cambios };
@@ -90,48 +100,39 @@ function cabecera(personas: string[], persona: string): HTMLElement {
     app.refrescarCalendario();
   };
   return h(
-    'header',
-    { class: 'cabecera' },
-    h('h1', { class: 'titulo' }, iconoCalendario(), 'La Segunda Venida de Cristo'),
-    h('div', { class: 'barra-acciones' }, personas.length ? filtroPersona(personas, persona) : null, herramientas()),
+    'div',
+    { class: 'herramientas herramientas-pie' },
+    h('button', {
+      type: 'button',
+      class: 'btn-herramienta',
+      text: 'A−',
+      'aria-label': 'Letra más pequeña',
+      disabled: prefs.tamano === 0,
+      onclick: () => cambiar({ tamano: prefs.tamano - 1 }),
+    }),
+    h('button', {
+      type: 'button',
+      class: 'btn-herramienta',
+      text: 'A+',
+      'aria-label': 'Letra más grande',
+      disabled: prefs.tamano === TAMANOS_LETRA.length - 1,
+      onclick: () => cambiar({ tamano: prefs.tamano + 1 }),
+    }),
+    h('button', {
+      type: 'button',
+      class: 'btn-herramienta',
+      text: prefs.tema === 'oscuro' ? '☀️' : '🌙',
+      'aria-label': prefs.tema === 'oscuro' ? 'Usar fondo claro' : 'Usar fondo oscuro',
+      onclick: () => cambiar({ tema: prefs.tema === 'oscuro' ? 'claro' : 'oscuro' }),
+    }),
+    h('button', {
+      type: 'button',
+      class: 'btn-herramienta',
+      text: '⚙',
+      'aria-label': 'Configuración',
+      onclick: abrirConfiguracion,
+    }),
   );
-
-  function herramientas(): HTMLElement {
-    return h(
-      'div',
-      { class: 'herramientas' },
-      h('button', {
-        type: 'button',
-        class: 'btn-herramienta',
-        text: 'A−',
-        'aria-label': 'Letra más pequeña',
-        disabled: prefs.tamano === 0,
-        onclick: () => cambiar({ tamano: prefs.tamano - 1 }),
-      }),
-      h('button', {
-        type: 'button',
-        class: 'btn-herramienta',
-        text: 'A+',
-        'aria-label': 'Letra más grande',
-        disabled: prefs.tamano === TAMANOS_LETRA.length - 1,
-        onclick: () => cambiar({ tamano: prefs.tamano + 1 }),
-      }),
-      h('button', {
-        type: 'button',
-        class: 'btn-herramienta',
-        text: prefs.tema === 'oscuro' ? '☀️' : '🌙',
-        'aria-label': prefs.tema === 'oscuro' ? 'Usar fondo claro' : 'Usar fondo oscuro',
-        onclick: () => cambiar({ tema: prefs.tema === 'oscuro' ? 'claro' : 'oscuro' }),
-      }),
-      h('button', {
-        type: 'button',
-        class: 'btn-herramienta',
-        text: '⚙',
-        'aria-label': 'Configuración',
-        onclick: abrirConfiguracion,
-      }),
-    );
-  }
 }
 
 /** Filas «Tipo: Persona» de un día, en el orden de los tipos. */
@@ -249,6 +250,7 @@ function pie(): HTMLElement {
   return h(
     'footer',
     { class: 'pie' },
+    herramientas(),
     h('div', { class: 'instalar-app' }, opcionesSinConexion()),
     estado ? h('p', { class: `estado-conexion${app.sinConexion ? ' sin-conexion' : ''}`, text: estado }) : null,
     h('p', { class: 'version', text: `Calendario de la Iglesia · v${VERSION}` }),

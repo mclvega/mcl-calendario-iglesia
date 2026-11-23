@@ -190,8 +190,15 @@ select {
   border-color: var(--acento-borde);
 }
 
-.barra-acciones .herramientas {
-  flex: none;
+.herramientas-pie {
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.herramientas-pie .btn-herramienta {
+  min-width: 64px;
+  min-height: 60px;
 }
 
 /* ✕ dentro del filtro, antes de la flecha del desplegable, para limpiarlo. */
