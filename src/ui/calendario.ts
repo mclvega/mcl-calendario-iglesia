@@ -48,7 +48,7 @@ function filtroPersona(personas: string[], persona: string): HTMLElement {
   return h(
     'div',
     { class: `filtro-persona${persona ? ' activo' : ''}` },
-    h('label', { class: 'etiqueta', for: 'filtro-persona', text: '👤 Ver turnos de:' }),
+    h('label', { class: 'etiqueta', for: 'filtro-persona', text: '👤 Filtrar por:' }),
     h(
       'div',
       { class: 'fila-campos' },

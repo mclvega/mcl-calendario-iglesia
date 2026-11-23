@@ -7,7 +7,7 @@ Sitio: https://mcl-calendario-iglesia.netlify.app
 ## Uso
 
 - **Ver**: abrir el sitio. Botones **A− / A+** para el tamaño de la letra y 🌙/☀️ para el fondo oscuro o claro.
-- **👤 Ver turnos de**: elegir una persona muestra su próximo turno arriba y solo sus días en el mes, con su nombre resaltado. La elección se recuerda en ese teléfono; «✕ Ver todos» la quita.
+- **👤 Filtrar por**: elegir una persona muestra su próximo turno arriba y solo sus días en el mes, con su nombre resaltado. La elección se recuerda en ese teléfono; «✕ Ver todos» la quita.
 - **Configurar**: botón **⚙** → contraseña. Se guarda solo, un segundo después de cada cambio.
   - 📅 **Fechas**: por mes, cada día de culto con filas **Tipo ▾ + Persona ▾**, nota opcional, «No hay culto este día» y «Agregar una fecha» especial.
   - 👥 **Personas**: mantenedor de la lista que se elige en cada fecha (renombrar cambia también sus fechas).
