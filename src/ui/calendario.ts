@@ -66,7 +66,6 @@ function destacadoPersona(datos: Datos, persona: string, hoy: string): HTMLEleme
     'section',
     { class: `destacado${fecha === hoy ? ' es-hoy' : ''}`, 'aria-label': 'Próximo turno' },
     h('p', { class: 'destacado-etiqueta', text: etiqueta }),
-    h('p', { class: 'destacado-persona', text: persona }),
     h('h2', { class: 'destacado-fecha', text: fechaLarga(fecha) }),
     dia.nota ? h('p', { class: 'nota', text: `⭐ ${dia.nota}` }) : null,
     asignaciones(datos, dia, 'destacado-asignaciones', persona),
