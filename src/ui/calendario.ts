@@ -46,7 +46,15 @@ function filtroPersona(personas: string[], persona: string): HTMLElement {
   for (const p of personas) lista.append(h('option', { value: p, text: p }));
   lista.value = persona;
   lista.addEventListener('change', () => cambiarPersona(lista.value));
-  return h('div', { class: 'filtro-persona' }, h('label', { class: 'etiqueta', for: 'filtro-persona', text: '👤 Filtrar por:' }), lista);
+  const limpiar = persona
+    ? h('button', { type: 'button', class: 'limpiar-filtro', text: '✕', 'aria-label': 'Limpiar filtro', onclick: () => cambiarPersona('') })
+    : null;
+  return h(
+    'div',
+    { class: 'filtro-persona' },
+    h('label', { class: 'etiqueta', for: 'filtro-persona', text: '👤 Filtrar por:' }),
+    h('div', { class: 'filtro-campo' }, lista, limpiar),
+  );
 }
 
 /** Próximo turno de la persona elegida en el filtro: todos los tipos de ese día, con su nombre resaltado. */
@@ -86,7 +94,6 @@ function cabecera(personas: string[], persona: string): HTMLElement {
     { class: 'cabecera' },
     h('h1', { class: 'titulo' }, iconoCalendario(), 'Calendario'),
     h('div', { class: 'barra-acciones' }, personas.length ? filtroPersona(personas, persona) : null, herramientas()),
-    persona ? boton('Ver todos', () => cambiarPersona(''), { icono: '✕', variante: 'suave', clase: 'btn-ancho', etiqueta: 'Ver a todas las personas' }) : null,
   );
 
   function herramientas(): HTMLElement {

@@ -194,6 +194,32 @@ select {
   flex: none;
 }
 
+/* ✕ dentro del filtro, antes de la flecha del desplegable, para limpiarlo. */
+.filtro-campo {
+  position: relative;
+}
+
+.filtro-campo select.activo {
+  padding-right: 78px;
+}
+
+.limpiar-filtro {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--acento-borde);
+  color: #000;
+  font-size: 0.9rem;
+  font-weight: 900;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
 @media (max-width: 420px) {
   .barra-acciones,
   .barra-acciones .herramientas {
