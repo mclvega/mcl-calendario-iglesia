@@ -1,4 +1,4 @@
-import { diaSemana, esFechaValida, fechasPorSemana, prefijoMes, type Mes } from './fechas';
+import { diaSemana, esFechaValida, fechaLarga, fechasPorSemana, prefijoMes, type Mes } from './fechas';
 
 /*
  * Modelo del calendario. Se usa en el navegador y también en la función de Netlify
@@ -193,4 +193,16 @@ export function quitarRol(datos: Datos, id: string): void {
     delete dia.asignaciones[id];
     if (diaVacio(dia)) delete datos.dias[fecha];
   }
+}
+
+/** Texto de un día para copiar y compartir (p. ej. por WhatsApp): fecha, nota y cada tipo con su persona. */
+export function textoDelDia(datos: Datos, fecha: string): string {
+  const dia = datos.dias[fecha];
+  const lineas = [fechaLarga(fecha, true)];
+  if (dia?.nota) lineas.push(`⭐ ${dia.nota}`);
+  for (const r of datos.roles) {
+    const persona = dia?.asignaciones[r.id];
+    if (persona) lineas.push(`${r.nombre}: ${persona}`);
+  }
+  return lineas.join('\n');
 }

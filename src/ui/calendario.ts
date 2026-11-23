@@ -1,10 +1,10 @@
 import { app } from '../app';
 import { entrar, ErrorApi, leerToken } from '../api';
-import { fechasDelMes, personasDelCalendario, proximoCulto, proximoTurno, tieneAsignaciones, tieneTurno, type Datos, type Dia } from '../core/datos';
+import { fechasDelMes, personasDelCalendario, proximoCulto, proximoTurno, textoDelDia, tieneAsignaciones, tieneTurno, type Datos, type Dia } from '../core/datos';
 import { DIAS, deISO, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, sumarDias, type Mes } from '../core/fechas';
 import { aplicarPreferencias, guardarPreferencias, leerPreferencias, TAMANOS_LETRA } from '../storage';
 import { VERSION } from '../version';
-import { abrirModal, boton, h } from './dom';
+import { abrirModal, avisar, boton, copiarTexto, h } from './dom';
 import { iconoCalendario } from './iconos';
 import { opcionesSinConexion } from './sinconexion';
 
@@ -70,7 +70,7 @@ function destacadoPersona(datos: Datos, persona: string, hoy: string): HTMLEleme
   }
   const dia = datos.dias[fecha];
   const etiqueta = fecha === hoy ? 'HOY LE TOCA' : fecha === sumarDias(hoy, 1) ? 'MAÑANA LE TOCA' : 'PRÓXIMO TURNO';
-  return h(
+  const tarjeta = h(
     'section',
     { class: `destacado${fecha === hoy ? ' es-hoy' : ''}`, 'aria-label': 'Próximo turno' },
     h('p', { class: 'destacado-etiqueta', text: etiqueta }),
@@ -78,6 +78,7 @@ function destacadoPersona(datos: Datos, persona: string, hoy: string): HTMLEleme
     dia.nota ? h('p', { class: 'nota', text: `⭐ ${dia.nota}` }) : null,
     asignaciones(datos, dia, 'destacado-asignaciones', persona),
   );
+  return copiarAlMantener(tarjeta, fecha);
 }
 
 /** Título y el filtro por persona a todo el ancho. */
@@ -151,12 +152,65 @@ function asignaciones(datos: Datos, dia: Dia | undefined, clase: string, resalta
   return h('div', { class: clase }, ...(filas.length ? filas : [h('p', { class: 'por-confirmar', text: 'Por confirmar' })]));
 }
 
+/**
+ * Mantener presionada una tarjeta (≈0,5 s) y soltar copia el texto de ese día para compartirlo.
+ * Se copia al soltar porque en iPhone el portapapeles solo se puede usar dentro de un toque.
+ * En Android, el menú de mantener presionado (contextmenu) también copia.
+ */
+function copiarAlMantener<T extends HTMLElement>(el: T, fecha: string): T {
+  const ESPERA = 500;
+  let inicio = 0;
+  let x = 0;
+  let y = 0;
+  let hecho = false;
+  let temporizador = 0;
+
+  const cancelar = () => {
+    inicio = 0;
+    clearTimeout(temporizador);
+    el.classList.remove('mantenido');
+  };
+  const copiar = async () => {
+    if (hecho) return;
+    hecho = true;
+    cancelar();
+    const ok = await copiarTexto(textoDelDia(app.datos, fecha));
+    avisar(ok ? '📋 Copiado. Pégalo en WhatsApp para compartirlo.' : 'No se pudo copiar');
+  };
+
+  el.addEventListener('pointerdown', (e) => {
+    inicio = Date.now();
+    hecho = false;
+    x = e.clientX;
+    y = e.clientY;
+    temporizador = window.setTimeout(() => {
+      el.classList.add('mantenido');
+      navigator.vibrate?.(30);
+    }, ESPERA);
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (inicio && Math.hypot(e.clientX - x, e.clientY - y) > 12) cancelar();
+  });
+  el.addEventListener('pointerup', () => {
+    if (inicio && Date.now() - inicio >= ESPERA) void copiar();
+    else cancelar();
+  });
+  el.addEventListener('pointercancel', () => {
+    if (!hecho) cancelar();
+  });
+  el.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    if (inicio) void copiar();
+  });
+  return el;
+}
+
 function destacado(datos: Datos, hoy: string): HTMLElement | null {
   const fecha = proximoCulto(datos, hoy);
   if (!fecha) return null;
   const dia = datos.dias[fecha];
   const etiqueta = fecha === hoy ? 'HOY' : fecha === sumarDias(hoy, 1) ? 'MAÑANA' : 'PRÓXIMO CULTO';
-  return h(
+  const tarjeta = h(
     'section',
     { class: `destacado${fecha === hoy ? ' es-hoy' : ''}`, 'aria-label': 'Próximo culto' },
     h('p', { class: 'destacado-etiqueta', text: etiqueta }),
@@ -164,6 +218,7 @@ function destacado(datos: Datos, hoy: string): HTMLElement | null {
     dia?.nota ? h('p', { class: 'nota', text: `⭐ ${dia.nota}` }) : null,
     asignaciones(datos, dia, 'destacado-asignaciones'),
   );
+  return copiarAlMantener(tarjeta, fecha);
 }
 
 function navegacionMes(datos: Datos, mes: Mes, mesHoy: Mes, persona: string): HTMLElement {
@@ -216,7 +271,7 @@ function listaDelMes(datos: Datos, mes: Mes, hoy: string, persona: string): HTML
       const d = deISO(fecha)!;
       const dia = datos.dias[fecha];
       const clase = fecha === hoy ? 'es-hoy' : fecha < hoy ? 'pasado' : '';
-      return h(
+      const tarjeta = h(
         'li',
         { class: `dia ${clase}`, 'aria-label': fechaLarga(fecha) },
         h(
@@ -233,6 +288,7 @@ function listaDelMes(datos: Datos, mes: Mes, hoy: string, persona: string): HTML
           asignaciones(datos, dia, 'dia-asignaciones', persona),
         ),
       );
+      return copiarAlMantener(tarjeta, fecha);
     }),
   );
 }
@@ -250,6 +306,7 @@ function pie(): HTMLElement {
   return h(
     'footer',
     { class: 'pie' },
+    h('p', { class: 'ayuda-copiar', text: '👆 Mantén presionada una fecha para copiarla y compartirla.' }),
     herramientas(),
     h('div', { class: 'instalar-app' }, opcionesSinConexion()),
     estado ? h('p', { class: `estado-conexion${app.sinConexion ? ' sin-conexion' : ''}`, text: estado }) : null,

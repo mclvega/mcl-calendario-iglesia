@@ -875,3 +875,23 @@ select {
 .titulo .icono-svg {
   font-size: 1.3em;
 }
+
+/* Mantener presionada una fecha para copiarla. */
+.dia,
+.destacado {
+  transition: transform 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dia.mantenido,
+.destacado.mantenido {
+  transform: scale(0.98);
+  box-shadow: 0 0 0 4px var(--primario);
+}
+
+.ayuda-copiar {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--suave);
+  margin-bottom: 8px;
+}

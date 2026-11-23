@@ -8,6 +8,7 @@ Sitio: https://mcl-calendario-iglesia.netlify.app
 
 - **Ver**: abrir el sitio. Al final del calendario: **A− / A+** (tamaño de la letra), 🌙/☀️ (fondo oscuro o claro) y ⚙ (Configuración).
 - **👤 Filtrar por**: elegir una persona muestra su próximo turno arriba y solo sus días en el mes, con su nombre resaltado. La elección se recuerda en ese teléfono; la ✕ del filtro lo limpia.
+- **📋 Copiar para compartir**: mantener presionada una fecha (o el cuadro del próximo culto) y soltar copia «Martes 24 de noviembre de 2026 / Coordinación: … / Predicación: …» para pegarlo en WhatsApp.
 - **📲 Instalar como app**: al final del calendario, con el botón (Android/Chrome) o los pasos para iPhone. No hay botón de descarga: cada vez que se abre con internet se guarda sola la última versión (app y calendario) para verla sin conexión.
 - **Configurar**: botón **⚙** → contraseña. Se guarda solo, un segundo después de cada cambio.
   - **Fechas**: por mes, cada día de culto con filas **Tipo ▾ + Persona ▾**, nota opcional, «No hay culto este día» y «Agregar una fecha» especial.

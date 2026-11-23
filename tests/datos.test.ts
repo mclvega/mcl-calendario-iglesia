@@ -9,6 +9,7 @@ import {
   proximoTurno,
   quitarRol,
   renombrarPersona,
+  textoDelDia,
   tieneAsignaciones,
   tieneTurno,
 } from '../src/core/datos';
@@ -101,5 +102,11 @@ describe('datos', () => {
   it('id de tipo sin acentos y único', () => {
     expect(idDeRol('Alabanza', [])).toBe('alabanza');
     expect(idDeRol('Predicación', ['predicacion'])).toBe('predicacion-2');
+  });
+
+  it('texto para compartir un día', () => {
+    expect(textoDelDia(datosIniciales(), '2026-12-06')).toBe(
+      'Domingo 6 de diciembre de 2026\n⭐ Día de Gracias\nCoordinación: David H.\nPredicación: P. Eliasib A.',
+    );
   });
 });
