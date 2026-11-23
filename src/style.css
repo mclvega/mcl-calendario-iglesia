@@ -259,10 +259,11 @@ select {
   }
 }
 
-/* El título siempre en una sola fila: la letra se ajusta al ancho de la pantalla. */
+/* El título siempre en una sola fila (la letra se ajusta al ancho) y el ícono al final, a la derecha. */
 .titulo {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.35em;
   font-size: min(1.45rem, 5.6vw);
   font-weight: 800;
@@ -869,4 +870,8 @@ select {
 
 .aviso.saliendo {
   opacity: 0;
+}
+
+.titulo .icono-svg {
+  font-size: 1.3em;
 }
