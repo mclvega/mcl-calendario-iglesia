@@ -1,7 +1,7 @@
 import { app } from '../app';
 import { entrar, ErrorApi, leerToken } from '../api';
 import { fechasDelMes, personasDelCalendario, proximoCulto, proximoTurno, tieneAsignaciones, tieneTurno, type Datos, type Dia } from '../core/datos';
-import { DIAS_CORTOS, deISO, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, sumarDias, type Mes } from '../core/fechas';
+import { DIAS, deISO, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, sumarDias, type Mes } from '../core/fechas';
 import { aplicarPreferencias, guardarPreferencias, leerPreferencias, TAMANOS_LETRA } from '../storage';
 import { VERSION } from '../version';
 import { abrirModal, boton, h } from './dom';
@@ -42,7 +42,7 @@ function cambiarPersona(persona: string): void {
 
 function filtroPersona(personas: string[], persona: string): HTMLElement {
   const lista = h('select', { class: `campo${persona ? ' activo' : ''}`, id: 'filtro-persona' }) as HTMLSelectElement;
-  lista.append(h('option', { value: '', text: 'Todas' }));
+  lista.append(h('option', { value: '', text: 'Todos' }));
   for (const p of personas) lista.append(h('option', { value: p, text: p }));
   lista.value = persona;
   lista.addEventListener('change', () => cambiarPersona(lista.value));
@@ -222,7 +222,7 @@ function listaDelMes(datos: Datos, mes: Mes, hoy: string, persona: string): HTML
         h(
           'div',
           { class: 'dia-fecha', 'aria-hidden': 'true' },
-          h('span', { class: 'dia-nombre', text: DIAS_CORTOS[d.getDay()] }),
+          h('span', { class: 'dia-nombre', text: DIAS[d.getDay()] }),
           h('span', { class: 'dia-numero', text: d.getDate() }),
           fecha === hoy ? h('span', { class: 'dia-hoy', text: 'HOY' }) : null,
         ),
