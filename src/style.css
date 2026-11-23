@@ -780,7 +780,9 @@ select {
   position: fixed;
   inset: 0;
   z-index: 20;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.72);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -795,8 +797,9 @@ select {
   overflow: auto;
   background: var(--tarjeta);
   color: var(--texto);
-  border: 2px solid var(--borde);
+  border: 3px solid var(--primario);
   border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
   padding: 22px 18px 18px;
 }
 
