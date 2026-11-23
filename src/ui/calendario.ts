@@ -5,7 +5,6 @@ import { DIAS, deISO, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, sumarDias,
 import { aplicarPreferencias, guardarPreferencias, leerPreferencias, TAMANOS_LETRA } from '../storage';
 import { VERSION } from '../version';
 import { abrirModal, boton, h } from './dom';
-import { iconoCalendario } from './iconos';
 import { opcionesSinConexion } from './sinconexion';
 
 /*
@@ -85,7 +84,7 @@ function cabecera(personas: string[], persona: string): HTMLElement {
   return h(
     'header',
     { class: 'cabecera' },
-    h('h1', { class: 'titulo' }, iconoCalendario(), 'La Segunda Venida de Cristo'),
+    h('h1', { class: 'titulo', text: 'La Segunda Venida de Cristo' }),
     personas.length ? h('div', { class: 'barra-acciones' }, filtroPersona(personas, persona)) : null,
   );
 }

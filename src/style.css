@@ -50,6 +50,16 @@ body {
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   font-size: 1rem;
   line-height: 1.35;
+  /* Al mantener presionado no se selecciona ni se copia el texto (sí en los campos). */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 #app {
@@ -249,12 +259,14 @@ select {
   }
 }
 
+/* El título siempre en una sola fila: la letra se ajusta al ancho de la pantalla. */
 .titulo {
   display: flex;
   align-items: center;
   gap: 0.35em;
-  font-size: 1.45rem;
+  font-size: min(1.45rem, 5.6vw);
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .icono-svg {
