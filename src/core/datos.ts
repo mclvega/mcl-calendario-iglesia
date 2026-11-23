@@ -1,4 +1,4 @@
-import { diaSemana, esFechaValida, fechasPorSemana, prefijoMes, sumarDias, type Mes } from './fechas';
+import { diaSemana, esFechaValida, fechasPorSemana, prefijoMes, type Mes } from './fechas';
 
 /*
  * Modelo del calendario. Se usa en el navegador y también en la función de Netlify
@@ -149,10 +149,15 @@ export function hayCulto(datos: Datos, fecha: string): boolean {
   return datos.diasSemana.includes(diaSemana(fecha));
 }
 
-/** Primer día de culto desde `desde` (incluido), buscando hasta 120 días adelante. */
+/** ¿El día tiene al menos una persona asignada (y se celebra)? Solo esos se muestran al público. */
+export function tieneAsignaciones(datos: Datos, fecha: string): boolean {
+  const dia = datos.dias[fecha];
+  return !!dia && !dia.oculto && Object.values(dia.asignaciones).some(Boolean);
+}
+
+/** Primer día con asignaciones desde `desde` (incluido). */
 export function proximoCulto(datos: Datos, desde: string): string | null {
-  for (let i = 0, f = desde; i <= 120; i++, f = sumarDias(f, 1)) if (hayCulto(datos, f)) return f;
-  return null;
+  return Object.keys(datos.dias).sort().find((f) => f >= desde && tieneAsignaciones(datos, f)) ?? null;
 }
 
 /** Personas para el filtro: la lista más cualquier nombre escrito en una asignación, en orden alfabético. */

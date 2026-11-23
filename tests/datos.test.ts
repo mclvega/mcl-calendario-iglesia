@@ -9,6 +9,7 @@ import {
   proximoTurno,
   quitarRol,
   renombrarPersona,
+  tieneAsignaciones,
   tieneTurno,
 } from '../src/core/datos';
 import { datosIniciales } from '../src/core/semilla';
@@ -65,6 +66,7 @@ describe('datos', () => {
   it('próximo culto desde un lunes es el martes', () => {
     expect(proximoCulto(datosIniciales(), '2026-11-23')).toBe('2026-11-24');
     expect(proximoCulto(datosIniciales(), '2026-11-24')).toBe('2026-11-24');
+});  it('solo cuentan los días con asignaciones (sin vacíos ni ocultos)', () => {    const datos = datosIniciales();    expect(tieneAsignaciones(datos, '2026-11-24')).toBe(true);    expect(tieneAsignaciones(datos, '2026-11-03')).toBe(false);    datos.dias['2026-12-08'] = { asignaciones: { coordinacion: '' }, nota: 'Solo nota' };    expect(tieneAsignaciones(datos, '2026-12-08')).toBe(false);    expect(proximoCulto(datos, '2026-12-07')).toBeNull();    datos.dias['2026-11-24'].oculto = true;    expect(proximoCulto(datos, '2026-11-23')).toBe('2026-11-26');
   });
 
   it('renombrar persona cambia sus asignaciones', () => {

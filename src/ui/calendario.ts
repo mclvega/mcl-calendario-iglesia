@@ -1,6 +1,6 @@
 import { app } from '../app';
 import { entrar, ErrorApi, leerToken } from '../api';
-import { fechasDelMes, personasDelCalendario, proximoCulto, proximoTurno, tieneTurno, type Datos, type Dia } from '../core/datos';
+import { fechasDelMes, personasDelCalendario, proximoCulto, proximoTurno, tieneAsignaciones, tieneTurno, type Datos, type Dia } from '../core/datos';
 import { DIAS_CORTOS, deISO, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, sumarDias, type Mes } from '../core/fechas';
 import { aplicarPreferencias, guardarPreferencias, leerPreferencias, TAMANOS_LETRA } from '../storage';
 import { VERSION } from '../version';
@@ -49,7 +49,7 @@ function filtroPersona(personas: string[], persona: string): HTMLElement {
   return h('div', { class: 'filtro-persona' }, h('label', { class: 'etiqueta', for: 'filtro-persona', text: '👤 Filtrar por:' }), lista);
 }
 
-/** Próximo turno de la persona elegida en el filtro, con las tareas que le tocan. */
+/** Próximo turno de la persona elegida en el filtro: todos los tipos de ese día, con su nombre resaltado. */
 function destacadoPersona(datos: Datos, persona: string, hoy: string): HTMLElement {
   const fecha = proximoTurno(datos, persona, hoy);
   if (!fecha) {
@@ -61,7 +61,6 @@ function destacadoPersona(datos: Datos, persona: string, hoy: string): HTMLEleme
     );
   }
   const dia = datos.dias[fecha];
-  const tareas = datos.roles.filter((r) => dia.asignaciones[r.id] === persona).map((r) => r.nombre);
   const etiqueta = fecha === hoy ? 'HOY LE TOCA' : fecha === sumarDias(hoy, 1) ? 'MAÑANA LE TOCA' : 'PRÓXIMO TURNO';
   return h(
     'section',
@@ -70,7 +69,7 @@ function destacadoPersona(datos: Datos, persona: string, hoy: string): HTMLEleme
     h('p', { class: 'destacado-persona', text: persona }),
     h('h2', { class: 'destacado-fecha', text: fechaLarga(fecha) }),
     dia.nota ? h('p', { class: 'nota', text: `⭐ ${dia.nota}` }) : null,
-    h('p', { class: 'destacado-tarea', text: tareas.join(' y ') }),
+    asignaciones(datos, dia, 'destacado-asignaciones', persona),
   );
 }
 
@@ -188,7 +187,7 @@ function navegacionMes(datos: Datos, mes: Mes, mesHoy: Mes, persona: string): HT
 }
 
 function listaDelMes(datos: Datos, mes: Mes, hoy: string, persona: string): HTMLElement {
-  const fechas = fechasDelMes(datos, mes).filter((f) => !persona || tieneTurno(datos, f, persona));
+  const fechas = fechasDelMes(datos, mes).filter((f) => (persona ? tieneTurno(datos, f, persona) : tieneAsignaciones(datos, f)));
   if (!fechas.length) {
     const texto = persona ? `${persona} no tiene turnos en ${nombreMes(mes).toLowerCase()}.` : 'No hay cultos anotados este mes.';
     return h('p', { class: 'vacio', text: texto });

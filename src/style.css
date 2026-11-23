@@ -321,11 +321,6 @@ select {
   margin-bottom: 4px;
 }
 
-.destacado-tarea {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: var(--primario);
-}
 
 .mes-conteo {
   display: block;
