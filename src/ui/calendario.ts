@@ -25,8 +25,7 @@ export function pantallaCalendario(raiz: HTMLElement): void {
 
   const proximo = persona ? destacadoPersona(datos, persona, hoy) : destacado(datos, hoy);
   raiz.append(
-    cabecera(),
-    ...(personas.length ? [filtroPersona(personas, persona)] : []),
+    cabecera(personas, persona),
     ...(proximo ? [proximo] : []),
     navegacionMes(datos, mesVisible, mesHoy, persona),
     listaDelMes(datos, mesVisible, hoy, persona),
@@ -40,22 +39,12 @@ function cambiarPersona(persona: string): void {
 }
 
 function filtroPersona(personas: string[], persona: string): HTMLElement {
-  const lista = h('select', { class: 'campo', id: 'filtro-persona' }) as HTMLSelectElement;
-  lista.append(h('option', { value: '', text: 'Todas las personas' }));
+  const lista = h('select', { class: `campo${persona ? ' activo' : ''}`, id: 'filtro-persona' }) as HTMLSelectElement;
+  lista.append(h('option', { value: '', text: 'Todas' }));
   for (const p of personas) lista.append(h('option', { value: p, text: p }));
   lista.value = persona;
   lista.addEventListener('change', () => cambiarPersona(lista.value));
-  return h(
-    'div',
-    { class: `filtro-persona${persona ? ' activo' : ''}` },
-    h('label', { class: 'etiqueta', for: 'filtro-persona', text: '👤 Filtrar por:' }),
-    h(
-      'div',
-      { class: 'fila-campos' },
-      lista,
-      persona ? boton('Ver todos', () => cambiarPersona(''), { icono: '✕', variante: 'suave', etiqueta: 'Ver a todas las personas' }) : null,
-    ),
-  );
+  return h('div', { class: 'filtro-persona' }, h('label', { class: 'etiqueta', for: 'filtro-persona', text: '👤 Filtrar por:' }), lista);
 }
 
 /** Próximo turno de la persona elegida en el filtro, con las tareas que le tocan. */
@@ -83,7 +72,8 @@ function destacadoPersona(datos: Datos, persona: string, hoy: string): HTMLEleme
   );
 }
 
-function cabecera(): HTMLElement {
+/** Título y, en una sola fila, el filtro por persona y los botones de letra, tema y Configuración. */
+function cabecera(personas: string[], persona: string): HTMLElement {
   const prefs = leerPreferencias();
   const cambiar = (cambios: Partial<typeof prefs>) => {
     const nuevas = { ...prefs, ...cambios };
@@ -95,7 +85,12 @@ function cabecera(): HTMLElement {
     'header',
     { class: 'cabecera' },
     h('h1', { class: 'titulo' }, h('span', { 'aria-hidden': 'true', text: '📅 ' }), 'Calendario'),
-    h(
+    h('div', { class: 'barra-acciones' }, personas.length ? filtroPersona(personas, persona) : null, herramientas()),
+    persona ? boton('Ver todos', () => cambiarPersona(''), { icono: '✕', variante: 'suave', clase: 'btn-ancho', etiqueta: 'Ver a todas las personas' }) : null,
+  );
+
+  function herramientas(): HTMLElement {
+    return h(
       'div',
       { class: 'herramientas' },
       h('button', {
@@ -128,8 +123,8 @@ function cabecera(): HTMLElement {
         'aria-label': 'Configuración',
         onclick: abrirConfiguracion,
       }),
-    ),
-  );
+    );
+  }
 }
 
 /** Filas «Tipo: Persona» de un día, en el orden de los tipos. */

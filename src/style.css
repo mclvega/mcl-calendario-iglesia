@@ -158,11 +158,52 @@ select {
 
 .cabecera {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 10px;
-  flex-wrap: wrap;
-  padding: 6px 0 14px;
+  padding: 6px 0 16px;
+}
+
+/* Filtro por persona y botones de acción en una sola fila. */
+.barra-acciones {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.barra-acciones .filtro-persona {
+  flex: 1;
+  min-width: 0;
+}
+
+.barra-acciones .etiqueta {
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.barra-acciones select {
+  font-weight: 700;
+  text-overflow: ellipsis;
+}
+
+.barra-acciones select.activo {
+  background: var(--acento);
+  border-color: var(--acento-borde);
+}
+
+.barra-acciones .herramientas {
+  flex: none;
+}
+
+@media (max-width: 420px) {
+  .barra-acciones,
+  .barra-acciones .herramientas {
+    gap: 5px;
+  }
+
+  .barra-acciones .btn-herramienta {
+    min-width: 46px;
+    padding: 0 4px;
+  }
 }
 
 .titulo {
@@ -253,22 +294,6 @@ select {
 }
 
 /* ---------- Filtro por persona ---------- */
-
-.filtro-persona {
-  background: var(--tarjeta);
-  border: 2px solid var(--borde);
-  border-radius: var(--radio);
-  padding: 12px;
-  margin-bottom: 16px;
-}
-
-.filtro-persona.activo {
-  border-color: var(--acento-borde);
-}
-
-.filtro-persona select {
-  font-weight: 700;
-}
 
 .persona.mia {
   align-self: flex-start;
