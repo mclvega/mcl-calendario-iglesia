@@ -160,10 +160,20 @@ function destacado(datos: Datos, hoy: string): HTMLElement | null {
 }
 
 function navegacionMes(datos: Datos, mes: Mes, mesHoy: Mes, persona: string): HTMLElement {
+  // Al cambiar de mes, los botones ◀ ▶ se quedan en el mismo lugar de la pantalla (no salta la vista).
   const ir = (nuevo: Mes) => {
+    const raiz = app.raiz!;
+    const antes = document.querySelector('.nav-mes')?.getBoundingClientRect().top ?? 0;
+    raiz.style.paddingBottom = '';
     mesVisible = nuevo;
     app.refrescarCalendario();
-    document.querySelector('.mes-titulo')?.scrollIntoView({ block: 'start' });
+    const nav = document.querySelector('.nav-mes');
+    if (!nav) return;
+    const objetivo = window.scrollY + nav.getBoundingClientRect().top - antes;
+    // Si el mes nuevo es más corto, se agrega espacio abajo para no tener que subir la página.
+    const maximo = document.documentElement.scrollHeight - window.innerHeight;
+    if (objetivo > maximo) raiz.style.paddingBottom = `${objetivo - maximo + 40}px`;
+    window.scrollTo(0, objetivo);
   };
   const esMesActual = mes.anio === mesHoy.anio && mes.mes === mesHoy.mes;
   const turnos = persona ? fechasDelMes(datos, mes).filter((f) => tieneTurno(datos, f, persona)).length : 0;

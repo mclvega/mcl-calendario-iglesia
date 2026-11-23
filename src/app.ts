@@ -29,6 +29,7 @@ export const app = {
     limpiar?.();
     this.actual = nombre;
     this.raiz.replaceChildren();
+    this.raiz.style.paddingBottom = '';
     limpiar = pantallas.get(nombre)!(this.raiz);
     window.scrollTo(0, 0);
   },
