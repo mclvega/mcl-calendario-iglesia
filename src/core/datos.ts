@@ -155,6 +155,24 @@ export function proximoCulto(datos: Datos, desde: string): string | null {
   return null;
 }
 
+/** Personas para el filtro: la lista más cualquier nombre escrito en una asignación, en orden alfabético. */
+export function personasDelCalendario(datos: Datos): string[] {
+  const nombres = new Set(datos.personas);
+  for (const dia of Object.values(datos.dias)) for (const p of Object.values(dia.asignaciones)) if (p) nombres.add(p);
+  return [...nombres].sort((a, b) => a.localeCompare(b, 'es'));
+}
+
+/** ¿Esa persona tiene alguna tarea ese día (y el día se celebra)? */
+export function tieneTurno(datos: Datos, fecha: string, persona: string): boolean {
+  const dia = datos.dias[fecha];
+  return !!dia && !dia.oculto && Object.values(dia.asignaciones).includes(persona);
+}
+
+/** Primera fecha desde `desde` (incluida) en que la persona tiene turno. */
+export function proximoTurno(datos: Datos, persona: string, desde: string): string | null {
+  return Object.keys(datos.dias).sort().find((f) => f >= desde && tieneTurno(datos, f, persona)) ?? null;
+}
+
 /** Cambia el nombre de una persona en la lista y en todas sus asignaciones. */
 export function renombrarPersona(datos: Datos, anterior: string, nuevo: string): void {
   datos.personas = datos.personas.map((p) => (p === anterior ? nuevo : p));

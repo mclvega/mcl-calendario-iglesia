@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { fechasDelMes, hayCulto, idDeRol, normalizarDatos, proximoCulto, quitarRol, renombrarPersona } from '../src/core/datos';
+import {
+  fechasDelMes,
+  hayCulto,
+  idDeRol,
+  normalizarDatos,
+  personasDelCalendario,
+  proximoCulto,
+  proximoTurno,
+  quitarRol,
+  renombrarPersona,
+  tieneTurno,
+} from '../src/core/datos';
 import { datosIniciales } from '../src/core/semilla';
 
 describe('datos', () => {
@@ -7,7 +18,7 @@ describe('datos', () => {
     const semilla = datosIniciales();
     expect(normalizarDatos(semilla)).toEqual(semilla);
     expect(semilla.dias['2026-12-06']).toEqual({
-      asignaciones: { coordinacion: 'H. David H.', predicacion: 'P. Eliasib A.' },
+      asignaciones: { coordinacion: 'David H.', predicacion: 'P. Eliasib A.' },
       nota: 'Día de Gracias',
     });
     expect(semilla.personas).toContain('P. Silvia R.');
@@ -69,8 +80,20 @@ describe('datos', () => {
     datos.dias['2026-11-05'] = { asignaciones: { predicacion: 'Ana' } };
     quitarRol(datos, 'predicacion');
     expect(datos.roles.map((r) => r.id)).toEqual(['coordinacion']);
-    expect(datos.dias['2026-11-10'].asignaciones).toEqual({ coordinacion: 'H. Rosa L.' });
+    expect(datos.dias['2026-11-10'].asignaciones).toEqual({ coordinacion: 'Rosa L.' });
     expect(datos.dias['2026-11-05']).toBeUndefined();
+  });
+
+  it('filtro por persona: lista, turnos y próximo turno', () => {
+    const datos = datosIniciales();
+    datos.dias['2026-12-08'] = { asignaciones: { coordinacion: 'Escrito a mano' } };
+    expect(personasDelCalendario(datos)).toContain('Escrito a mano');
+    expect(tieneTurno(datos, '2026-11-22', 'P. Eliasib A.')).toBe(true);
+    expect(tieneTurno(datos, '2026-11-24', 'P. Eliasib A.')).toBe(false);
+    expect(proximoTurno(datos, 'P. Eliasib A.', '2026-11-23')).toBe('2026-11-29');
+    datos.dias['2026-11-29'].oculto = true;
+    expect(proximoTurno(datos, 'P. Eliasib A.', '2026-11-23')).toBe('2026-12-06');
+    expect(proximoTurno(datos, 'P. Eliasib A.', '2026-12-07')).toBeNull();
   });
 
   it('id de tipo sin acentos y único', () => {

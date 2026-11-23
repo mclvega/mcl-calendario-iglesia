@@ -16,10 +16,12 @@ export type Tema = 'claro' | 'oscuro';
 export interface Preferencias {
   tamano: number;
   tema: Tema;
+  /** Filtro «Ver turnos de»: '' = todas las personas. */
+  persona: string;
 }
 
 export function preferenciasPorDefecto(): Preferencias {
-  return { tamano: 2, tema: 'claro' };
+  return { tamano: 2, tema: 'claro', persona: '' };
 }
 
 export function normalizarPreferencias(entrada: unknown): Preferencias {
@@ -29,6 +31,7 @@ export function normalizarPreferencias(entrada: unknown): Preferencias {
   return {
     tamano: Number.isInteger(e.tamano) && e.tamano! >= 0 && e.tamano! < TAMANOS_LETRA.length ? e.tamano! : d.tamano,
     tema: e.tema === 'oscuro' ? 'oscuro' : 'claro',
+    persona: typeof e.persona === 'string' ? e.persona.trim().slice(0, 60) : d.persona,
   };
 }
 

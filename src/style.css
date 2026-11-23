@@ -252,6 +252,51 @@ select {
   margin-bottom: 6px;
 }
 
+/* ---------- Filtro por persona ---------- */
+
+.filtro-persona {
+  background: var(--tarjeta);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.filtro-persona.activo {
+  border-color: var(--acento-borde);
+}
+
+.filtro-persona select {
+  font-weight: 700;
+}
+
+.persona.mia {
+  align-self: flex-start;
+  background: var(--acento);
+  border: 2px solid var(--acento-borde);
+  border-radius: 10px;
+  padding: 0 10px;
+}
+
+.destacado-persona {
+  font-weight: 800;
+  color: var(--suave);
+  margin-bottom: 4px;
+}
+
+.destacado-tarea {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--primario);
+}
+
+.mes-conteo {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--suave);
+}
+
 /* ---------- Mes ---------- */
 
 .nav-mes {

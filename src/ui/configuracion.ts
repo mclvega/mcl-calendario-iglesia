@@ -325,7 +325,7 @@ export function pantallaConfiguracion(raiz: HTMLElement): () => void {
       type: 'text',
       class: 'campo',
       maxlength: LIMITES.nombre,
-      placeholder: 'p. ej. H. Rosa L.',
+      placeholder: 'p. ej. Rosa L.',
       'aria-label': 'Nombre de la persona',
     }) as HTMLInputElement;
     const agregar = h(
