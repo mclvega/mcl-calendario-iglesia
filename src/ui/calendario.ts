@@ -5,6 +5,7 @@ import { DIAS_CORTOS, deISO, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, sum
 import { aplicarPreferencias, guardarPreferencias, leerPreferencias, TAMANOS_LETRA } from '../storage';
 import { VERSION } from '../version';
 import { abrirModal, boton, h } from './dom';
+import { iconoCalendario } from './iconos';
 import { opcionesSinConexion } from './sinconexion';
 
 /*
@@ -85,7 +86,7 @@ function cabecera(personas: string[], persona: string): HTMLElement {
   return h(
     'header',
     { class: 'cabecera' },
-    h('h1', { class: 'titulo' }, h('span', { 'aria-hidden': 'true', text: '📅 ' }), 'Calendario'),
+    h('h1', { class: 'titulo' }, iconoCalendario(), 'Calendario'),
     h('div', { class: 'barra-acciones' }, personas.length ? filtroPersona(personas, persona) : null, herramientas()),
     persona ? boton('Ver todos', () => cambiarPersona(''), { icono: '✕', variante: 'suave', clase: 'btn-ancho', etiqueta: 'Ver a todas las personas' }) : null,
   );

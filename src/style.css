@@ -207,8 +207,20 @@ select {
 }
 
 .titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
   font-size: 1.45rem;
   font-weight: 800;
+}
+
+.icono-svg {
+  display: inline-flex;
+  line-height: 0;
+}
+
+.pestana .icono-svg {
+  font-size: 1.2em;
 }
 
 .herramientas {

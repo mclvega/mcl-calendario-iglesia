@@ -3,6 +3,7 @@ import { ErrorApi, guardarCalendario, salir } from '../api';
 import { diaVacio, fechasDelMes, idDeRol, LIMITES, quitarRol, renombrarPersona, type Datos, type Dia } from '../core/datos';
 import { DIAS, diaSemana, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, prefijoMes, type Mes } from '../core/fechas';
 import { avisar, boton, confirmar, h } from './dom';
+import { iconoCalendario } from './iconos';
 import { pedirContrasena } from './calendario';
 
 /*
@@ -13,10 +14,10 @@ import { pedirContrasena } from './calendario';
 type Seccion = 'fechas' | 'personas' | 'tipos' | 'dias' | 'datos';
 
 const SECCIONES: [Seccion, string, string][] = [
-  ['fechas', '📅', 'Fechas'],
+  ['fechas', '', 'Fechas'], // ícono SVG propio (el emoji 📅 trae texto en inglés)
   ['personas', '👥', 'Personas'],
   ['tipos', '🏷️', 'Tipos'],
-  ['dias', '🗓️', 'Días de culto'],
+  ['dias', '⛪', 'Días de culto'],
   ['datos', '🔒', 'Sesión'],
 ];
 
@@ -115,7 +116,7 @@ export function pantallaConfiguracion(raiz: HTMLElement): () => void {
             pintar();
           },
         },
-        h('span', { 'aria-hidden': 'true', text: icono }),
+        id === 'fechas' ? iconoCalendario() : h('span', { 'aria-hidden': 'true', text: icono }),
         h('span', { text: nombre }),
       ),
     ),
@@ -145,7 +146,7 @@ export function pantallaConfiguracion(raiz: HTMLElement): () => void {
     contenido.replaceChildren(pintores[seccion]());
   }
 
-  /* ---------- 📅 Fechas ---------- */
+  /* ---------- Fechas ---------- */
 
   function seccionFechas(): HTMLElement {
     const mes = mesEditado!;
@@ -195,7 +196,7 @@ export function pantallaConfiguracion(raiz: HTMLElement): () => void {
       agregar,
       fechas.length
         ? h('div', { class: 'lista-editar' }, ...fechas.map(tarjetaFecha))
-        : h('p', { class: 'vacio', text: 'No hay fechas este mes. Agrega una arriba o marca días de culto en 🗓️ Días de culto.' }),
+        : h('p', { class: 'vacio', text: 'No hay fechas este mes. Agrega una arriba o marca días de culto en ⛪ Días de culto.' }),
     );
   }
 
@@ -497,7 +498,7 @@ export function pantallaConfiguracion(raiz: HTMLElement): () => void {
     );
   }
 
-  /* ---------- 🗓️ Días de culto ---------- */
+  /* ---------- ⛪ Días de culto ---------- */
 
   function seccionDiasCulto(): HTMLElement {
     return h(
