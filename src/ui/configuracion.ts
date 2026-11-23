@@ -4,7 +4,6 @@ import { diaVacio, fechasDelMes, idDeRol, LIMITES, quitarRol, renombrarPersona, 
 import { DIAS, diaSemana, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, prefijoMes, type Mes } from '../core/fechas';
 import { avisar, boton, confirmar, h } from './dom';
 import { pedirContrasena } from './calendario';
-import { opcionesSinConexion } from './sinconexion';
 
 /*
  * Configuración (protegida con contraseña): mantenedores de fechas, personas, tipos y días de culto.
@@ -18,7 +17,7 @@ const SECCIONES: [Seccion, string, string][] = [
   ['personas', '👥', 'Personas'],
   ['tipos', '🏷️', 'Tipos'],
   ['dias', '🗓️', 'Días de culto'],
-  ['datos', '💾', 'Datos'],
+  ['datos', '🔒', 'Sesión'],
 ];
 
 /** Lunes primero, como en un calendario de pared. */
@@ -520,13 +519,12 @@ export function pantallaConfiguracion(raiz: HTMLElement): () => void {
     );
   }
 
-  /* ---------- 💾 Datos ---------- */
+  /* ---------- 🔒 Sesión ---------- */
 
   function seccionDatos(): HTMLElement {
     return h(
       'section',
       { class: 'seccion pila' },
-      opcionesSinConexion(),
       h(
         'div',
         { class: 'opcion-config' },

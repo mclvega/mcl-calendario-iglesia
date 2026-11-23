@@ -43,6 +43,9 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') void actualizar();
 });
 window.addEventListener('online', () => void actualizar());
+// El navegador avisa que se puede instalar después de cargar: se redibuja para mostrar el botón «Instalar como app».
+window.addEventListener('beforeinstallprompt', () => setTimeout(() => app.refrescarCalendario()));
+window.addEventListener('appinstalled', () => app.refrescarCalendario());
 
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {

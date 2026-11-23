@@ -5,6 +5,7 @@ import { DIAS_CORTOS, deISO, fechaLarga, hoyISO, mesDe, moverMes, nombreMes, sum
 import { aplicarPreferencias, guardarPreferencias, leerPreferencias, TAMANOS_LETRA } from '../storage';
 import { VERSION } from '../version';
 import { abrirModal, boton, h } from './dom';
+import { opcionesSinConexion } from './sinconexion';
 
 /*
  * Vista pública, pensada para personas mayores: letra grande, alto contraste,
@@ -232,6 +233,7 @@ function pie(): HTMLElement {
   return h(
     'footer',
     { class: 'pie' },
+    h('div', { class: 'instalar-app' }, opcionesSinConexion()),
     estado ? h('p', { class: `estado-conexion${app.sinConexion ? ' sin-conexion' : ''}`, text: estado }) : null,
     h('p', { class: 'version', text: `Calendario de la Iglesia · v${VERSION}` }),
   );

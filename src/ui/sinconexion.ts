@@ -105,7 +105,7 @@ export function opcionesSinConexion(): HTMLElement {
       instalarTexto.textContent = r.outcome === 'accepted' ? '¡Instalado! Ábrelo desde tu pantalla de inicio.' : 'Puedes instalarlo cuando quieras.';
       ocultar(instalar);
     }
-  }, { icono: '📲', variante: 'suave' });
+  }, { icono: '📲', variante: 'primario' });
   const instalarTexto = h('p', { class: 'ayuda-texto' });
   if (instalada()) {
     ocultar(instalar);
@@ -118,5 +118,6 @@ export function opcionesSinConexion(): HTMLElement {
   }
 
   void comprobar();
-  return h('div', { class: 'opcion-config' }, h('span', { class: 'etiqueta', text: '📥 Usar sin conexión' }), estado, descargar, instalar, instalarTexto);
+  // Primero instalar (lo más útil para personas mayores) y después la descarga para usar sin conexión.
+  return h('div', { class: 'opcion-config' }, h('span', { class: 'etiqueta', text: '📲 Instalar como app' }), instalar, instalarTexto, estado, descargar);
 }

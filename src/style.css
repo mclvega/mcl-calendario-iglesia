@@ -450,6 +450,17 @@ select {
   gap: 6px;
 }
 
+.instalar-app {
+  text-align: left;
+  font-size: 1rem;
+  color: var(--texto);
+  margin-bottom: 8px;
+}
+
+.instalar-app .btn {
+  width: 100%;
+}
+
 .estado-conexion.sin-conexion {
   color: var(--peligro);
   font-weight: 700;
